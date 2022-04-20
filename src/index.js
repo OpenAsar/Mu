@@ -1,20 +1,20 @@
-import { mkdirSync, writeFileSync, rmSync, readdirSync, readFileSync } from 'fs';
+import fs from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { execFile } from 'child_process';
-import { brotliCompressSync } from 'zlib';
+import zlib from 'zlib';
 
 
 // Setup dirs
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const outDir = join(__dirname, '..', 'dist');
-rmSync(outDir, { force: true, recursive: true });
-mkdirSync(outDir, { recursive: true });
+fs.rmSync(outDir, { force: true, recursive: true });
+fs.mkdirSync(outDir, { recursive: true });
 
 const tmpDir = join(__dirname, '..', 'tmp');
-rmSync(tmpDir, { force: true, recursive: true });
-mkdirSync(tmpDir, { recursive: true });
+fs.rmSync(tmpDir, { force: true, recursive: true });
+fs.mkdirSync(tmpDir, { recursive: true });
 
 // Setup utils
 const remoteUrl =  'https://discord.com/api';
@@ -30,11 +30,11 @@ for (const platform of [ 'linux', 'osx' ]) {
     console.log(platform, channel, host);
 
     const baseDir = join(outDir, platform, channel);
-    mkdirSync(baseDir, { recursive: true });
+    fs.mkdirSync(baseDir, { recursive: true });
 
     const modules = await getModules(platform, channel, host);
     console.log('saving modules...');
-    writeFileSync(join(baseDir, 'modules.json'), JSON.stringify(modules, null, 2));
+    fs.writeFileSync(join(baseDir, 'modules.json'), JSON.stringify(modules, null, 2));
 
     for (const module in modules) {
       const version = modules[module];
@@ -45,22 +45,22 @@ for (const platform of [ 'linux', 'osx' ]) {
       const prefix = module + '-' + version;
 
       const zipPath = join(tmpDir, prefix + '.zip');
-      writeFileSync(zipPath, buffer);
+      fs.writeFileSync(zipPath, buffer);
 
       const extractDir = join(tmpDir, prefix);
-      rmSync(extractDir, { force: true, recursive: true });
-      mkdirSync(extractDir);
+      fs.rmSync(extractDir, { force: true, recursive: true });
+      fs.mkdirSync(extractDir);
 
       const p1 = execFile('unzip', ['-o', zipPath, '-d', extractDir]);
       await new Promise((res) => p1.on('close', res));
-      rmSync(zipPath, { force: true });
+      fs.rmSync(zipPath, { force: true });
 
       const tarPath = zipPath.replace('.zip', '.tar');
 
       let files = [];
       const walk = (f) => {
         try {
-          for (const file of readdirSync(f)) walk(join(f, file));
+          for (const file of fs.readdirSync(f)) walk(join(f, file));
         } catch { files.push(f.replace(extractDir + '/', '')); }
       };
       walk(extractDir);
@@ -68,11 +68,13 @@ for (const platform of [ 'linux', 'osx' ]) {
       const p2 = execFile('tar', ['-cf', tarPath, ...files ], { cwd: extractDir });
       await new Promise((res) => p2.on('close', res));
 
-      const compressed = brotliCompressSync(readFileSync(tarPath));
-
       const finalPath = join(baseDir, module);
-      writeFileSync(finalPath, compressed);
-      rmSync(tarPath, { force: true });
+      const p3 = execFile('brotli', ['-6', tarPath, '-o', finalPath ]);
+      await new Promise((res) => p3.on('close', res));
+
+      console.log((fs.statSync(tarPath).size / (1024*1024)).toFixed(2), '->', (fs.statSync(finalPath).size / (1024*1024)).toFixed(2));
+
+      fs.rmSync(tarPath, { force: true });
     }
   }
 }
