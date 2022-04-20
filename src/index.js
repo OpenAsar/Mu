@@ -72,7 +72,7 @@ for (const platform of [ 'linux', 'osx' ]) {
 
       const finalPath = join(baseDir, module);
       writeFileSync(finalPath, compressed);
-      // rmSync(tarPath, { force: true });
+      rmSync(tarPath, { force: true });
     }
   }
 }
