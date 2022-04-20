@@ -1,0 +1,37 @@
+name: Nightly
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'src/**'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js v17.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 17.x
+
+    - name: Build
+      run: |
+        node --experimental-fetch src
+
+    - name: Push
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        rm -rf ../dist
+        cp -rf dist ..
+        git checkout gh-pages --
+        rm -rf *
+        cp -rf ../dist/* .
+        git add --all
+        git commit -m "[Chore] Update gh-pages"
+        git push origin gh-pages
