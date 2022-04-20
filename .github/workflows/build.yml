@@ -3,9 +3,9 @@ name: Build
 on:
   push:
     branches: [ main ]
-    paths:
-    - 'src/**'
-    - 'github/workflows/**'
+#    paths:
+#    - 'src/**'
+#    - 'github/workflows/**'
 
 jobs:
   build:
