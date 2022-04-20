@@ -1,2 +1,2 @@
 # Mu
-μ(micro) Module Updater server
+μ(micro) Module Updater server. This is designed as a open (standard and source) replacement for Discord's old Module Updater API (`/api/modules`). **This is not a one-to-one / drop-in replacement, the API is completely different but offers similar/better features.**
