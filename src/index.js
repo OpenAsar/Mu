@@ -24,8 +24,8 @@ const getModules = async (platform, channel, host) => (await (await fetch(remote
 
 console.log('starting...');
 (async function() {
-for (const platform of [ 'linux', 'osx' ]) {
-  for (const channel of [ 'canary', 'ptb', 'stable', 'development' ]) {
+for (const platform of [ 'linux', 'osx' ]) { // linux, osx only
+  for (const channel of [ 'canary', 'ptb', 'stable', 'development' ]) { // All channels
     const host = await getLatestHost(platform, channel);
     console.log(platform, channel, host);
 
