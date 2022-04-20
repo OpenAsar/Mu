@@ -2,24 +2,13 @@ import { mkdirSync, writeFileSync, rmSync, readdirSync, readFileSync } from 'fs'
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { execFile } from 'child_process';
-import { deflateSync, brotliCompressSync } from 'zlib';
+import { brotliCompressSync } from 'zlib';
 
-// Setup compression
-let compress, compression = 'brotli'; // brotli | zlib
-switch (compression) {
-  case 'brotli':
-    compress = brotliCompressSync;
-    break;
-  
-  case 'zlib':
-    compress = deflateSync;
-    break;
-}
 
 // Setup dirs
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const outDir = join(__dirname, '..', 'docs');
+const outDir = join(__dirname, '..', 'dist');
 rmSync(outDir, { force: true, recursive: true });
 mkdirSync(outDir, { recursive: true });
 
@@ -33,7 +22,7 @@ const remoteUrl =  'https://discord.com/api';
 const getLatestHost = async (platform, channel) => (await (await fetch(remoteUrl + `/updates/${channel}?platform=${platform}&version=0.0.0`)).json()).name;
 const getModules = async (platform, channel, host) => (await (await fetch(remoteUrl + `/modules/${channel}/versions.json?host_version=${host}&platform=${platform}`)).json())
 
-
+console.log('starting...');
 (async function() {
 for (const platform of [ 'linux', 'osx' ]) {
   for (const channel of [ 'canary', 'ptb', 'stable', 'development' ]) {
@@ -79,7 +68,7 @@ for (const platform of [ 'linux', 'osx' ]) {
       const p2 = execFile('tar', ['-cf', tarPath, ...files ], { cwd: extractDir });
       await new Promise((res) => p2.on('close', res));
 
-      const compressed = compress(readFileSync(tarPath));
+      const compressed = brotliCompressSync(readFileSync(tarPath));
 
       const finalPath = join(baseDir, module);
       writeFileSync(finalPath, compressed);
