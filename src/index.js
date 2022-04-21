@@ -53,7 +53,6 @@ for (const platform of [ 'linux', 'osx' ]) { // linux, osx only
 
       const p1 = execFile('unzip', ['-o', zipPath, '-d', extractDir]);
       await new Promise((res) => p1.on('close', res));
-      fs.rmSync(zipPath, { force: true });
 
       const tarPath = zipPath.replace('.zip', '.tar');
 
@@ -72,9 +71,11 @@ for (const platform of [ 'linux', 'osx' ]) { // linux, osx only
       const p3 = execFile('brotli', ['-6', tarPath, '-o', finalPath ]);
       await new Promise((res) => p3.on('close', res));
 
-      console.log((fs.statSync(tarPath).size / (1024*1024)).toFixed(2), '->', (fs.statSync(finalPath).size / (1024*1024)).toFixed(2));
+      const getSize = (f) => (fs.statSync(f).size / (1024*1024)).toFixed(2)
+      console.log('compressed', getSize(tarPath), '->', getSize(finalPath), `(${getSize(zipPath)})`);
 
       fs.rmSync(tarPath, { force: true });
+      fs.rmSync(zipPath, { force: true });
     }
   }
 }
