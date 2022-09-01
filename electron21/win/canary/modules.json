@@ -8,11 +8,11 @@
   "discord_erlpack": 9010310,
   "discord_game_utils": 9010310,
   "discord_cloudsync": 9010309,
-  "discord_krisp": 9011325,
+  "discord_krisp": 9011624,
   "discord_vigilante": 9010311,
-  "discord_desktop_core": 9011325,
+  "discord_desktop_core": 9011624,
   "discord_media": 9010310,
   "discord_dispatch": 9010310,
   "discord_rpc": 9010251,
-  "host": 9011326
+  "host": 9011625
 }
