@@ -1,5 +1,5 @@
 {
-  "discord_utils": 9170058,
+  "discord_utils": 9181310,
   "discord_dispatch": 9170057,
   "discord_rpc": 9170037,
   "discord_modules": 9170058,
@@ -14,6 +14,6 @@
   "discord_overlay2": 9170058,
   "discord_hook": 9170058,
   "discord_desktop_core": 9181059,
-  "host": 9132144,
+  "host": 9181353,
   "open_react_devtools": 9132309
 }
