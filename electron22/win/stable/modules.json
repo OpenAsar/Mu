@@ -1,0 +1,19 @@
+{
+  "discord_modules": 210212017,
+  "discord_erlpack": 210212016,
+  "discord_cloudsync": 210212016,
+  "discord_overlay2": 210212017,
+  "discord_media": 210212017,
+  "discord_game_utils": 210212017,
+  "discord_rpc": 210212002,
+  "discord_utils": 210212018,
+  "discord_krisp": 211042336,
+  "discord_dispatch": 210212016,
+  "discord_desktop_core": 211051445,
+  "discord_hook": 210212017,
+  "discord_spellcheck": 210212017,
+  "discord_voice": 211012218,
+  "discord_vigilante": 210212018,
+  "host": 211051316,
+  "open_react_devtools": 209132309
+}
